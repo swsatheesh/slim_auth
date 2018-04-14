@@ -8,6 +8,6 @@ class ValidationErrorsMiddleware extends Middleware {
         unset($_SESSION['errors']);
 
         $response = $next($request, $response);
-        return $response;
+        return $response;   
     }
 }
