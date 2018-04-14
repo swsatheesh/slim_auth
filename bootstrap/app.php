@@ -40,6 +40,14 @@
         return $capsule;
     };
 
+    $container['auth'] = function() {
+        return new \App\Auth\Auth;
+    };
+
+    $container['flash'] = function () {
+        return new \Slim\Flash\Messages;
+    };
+
     $container['view'] = function ($container) {
         $view = new \Slim\Views\Twig(__DIR__ . './../resources/views', [
             'cache' => false
@@ -49,6 +57,11 @@
             $container->router,
             $container->request->getUri()
         ));
+
+        $view->getEnvironment()->addGlobal('auth', [
+            'check' => $container->auth->check(),
+            'user' => $container->auth->user(),
+        ]);
 
         return $view;
     };
@@ -65,10 +78,18 @@
         return new \App\Controllers\Auth\AuthController($container);
     };
 
+    $container['csrf'] = function() {
+        return new \Slim\Csrf\Guard;
+    };
+
     $app->add(new \App\Middleware\ValidationErrorsMiddleware($container));
 
     $app->add(new \App\Middleware\OldInputMiddleware($container));
 
-    v::with('App\\Validation\\Rules\\');
+    $app->add(new \App\Middleware\CsrfViewMiddleware($container));
+
+    $app->add($container->csrf);
+
+    v::with('App\\Validation\\Rules');
 
     require __DIR__ . './../app/routes.php';
