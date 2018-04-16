@@ -63,6 +63,8 @@
             'user' => $container->auth->user(),
         ]);
 
+        $view->getEnvironment()->addGlobal('flash', $container->flash);
+
         return $view;
     };
 
@@ -76,6 +78,10 @@
 
     $container['AuthController'] = function ($container) {
         return new \App\Controllers\Auth\AuthController($container);
+    };
+
+    $container['PasswordController'] = function ($container) {
+        return new \App\Controllers\Auth\PasswordController($container);
     };
 
     $container['csrf'] = function() {

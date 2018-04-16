@@ -22,6 +22,7 @@ class HomeController extends  Controller {
         // ]);
 
         // die();
+        
         return $this->view->render($response, 'home.twig');
     }
 }

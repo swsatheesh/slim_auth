@@ -25,6 +25,7 @@ class AuthController extends  Controller {
         );
 
         if (!$auth) {
+            $this->flash->addMessage('error', 'Sign in falied!!!!!!!!!!');
             return $response->withRedirect($this->router->pathFor('auth.signin'));
         } 
 
@@ -52,6 +53,8 @@ class AuthController extends  Controller {
             'name' => $request->getParam('name'),
             'password' => password_hash($request->getParam('password'), PASSWORD_DEFAULT),
         ]);
+
+        $this->flash->addMessage('info', 'Signed Up!!!!!!!!!!');
 
         $this->auth->attempt($user->email, $request->getParam('password'));
 
